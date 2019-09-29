@@ -1,0 +1,1 @@
+intel_iommu=on iommu=pt kvm.ignore_msrs=1 kvm.report_ignored_msrs=0 amdgpu.dc=0
