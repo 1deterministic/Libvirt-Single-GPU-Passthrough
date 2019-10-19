@@ -1,0 +1,13 @@
+    # nat network
+    <interface type='network'>
+      <mac address='::MAC-ADDR::'/>
+      <source network='default'/>
+      <model type='virtio'/>
+    </interface>
+    
+    # bridged network
+    <interface type="direct">
+      <mac address="::MAC-ADDR::"/>
+      <source dev="::NET-DEV::" mode="bridge"/>
+      <model type="virtio"/>
+    </interface>

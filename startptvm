@@ -10,19 +10,19 @@ if [ "$1" == "" ]; then
     exit 1
 fi
 
-sleep 3
+sleep 5
 
 systemctl stop display-manager
-sleep 3
+sleep 5
 
 virsh start "$1"
 sleep 5
 
 # there are problems when a VM has a name that contains another VM name inside it (say, Windows10 and Windows10-Games)
 while [[ $(virsh list) == *"$1"* ]]; do
-    sleep 1
+    sleep 5
 done
 
-sleep 3
+sleep 5
 
 systemctl start display-manager
