@@ -137,13 +137,13 @@ You also have to replace the these values
       <source>
         <address domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
       </source>
-      <rom bar='on' file='::VROM-PATH::'/>
+      <rom file='::VROM-PATH::'/>
     </hostdev>
     <hostdev mode='subsystem' type='pci' managed='yes'>
       <source>
         <address domain='0x0000' bus='0x01' slot='0x00' function='0x1'/>
       </source>
-      <rom bar='on'/>
+      <rom file='::VROM-PATH::'/>
     </hostdev>
     <hostdev mode='subsystem' type='pci' managed='yes'>
       <source>
