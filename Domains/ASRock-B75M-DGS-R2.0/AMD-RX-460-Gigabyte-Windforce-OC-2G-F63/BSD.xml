@@ -7,12 +7,12 @@ This xml is defined with
 * only the 1st core pinned to the 1st cpu thread available, add more until you have one for each vcpu defined
 
 You also have to replace the these values
-::OVMF-PATH:: with the path to "OVMF_CODE.fd" on your system (for instance /path/to/OVMF_CODE.fd, on Arch is /usr/share/ovmf/x64/OVMF_CODE.fd)
+::OVMF-PATH:: with the path to "OVMF_CODE.fd" on your system (for instance /path/to/OVMF_CODE.fd, on Arch is /usr/share/ovmf/x64/OVMF_CODE.fd, on Fedora is /usr/share/edk2/ovmf/OVMF_CODE.fd)
 ::NVRAM-PATH:: with the path where you want to store the *_VARS.fd for this vm (for instance /path/to/NVRAM/BSD_VARS.fd)
 ::QCOW2-PATH:: with the path where you have an existing qcow2 file that will be the system drive for this vm (for instance /path/to/BSD.qcow2)
 ::CDR-PATH:: with the path where you have an iso file you wish to use in the vm, an iso installer usually (for instance /path/to/BSD.iso)
 ::MAC-ADDR:: with the desired MAC address for the virtual network card (for instance 52:54:00:d2:d3:3d)
-::VROM-PATH:: with the path where you have the rom file for the graphics card (for instance /path/to/AMD-RX-460-Gigabyte-Windforce-OC-2G-F63.rom)
+::VROM-PATH:: with the path where you have the rom file for the graphics card (for instance /path/to/AMD-RX-460-Gigabyte-Windforce-OC-2G-F63.rom, on Fedora you may want to put this file on a folder that the qemu user can access, like /usr/share/libvirt)
 -->
 
 <domain type='kvm'>
