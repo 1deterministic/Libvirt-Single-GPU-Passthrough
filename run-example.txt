@@ -1,3 +1,0 @@
-# run startptvm like this so it will detach from the terminal and wait for the vm to stop before starting the display manager
-
-sudo su -c "'/path/to/startptvm' domain-name & disown"

@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+sudo su -c "startvmforrealthistime $1 $(whoami) & disown"
