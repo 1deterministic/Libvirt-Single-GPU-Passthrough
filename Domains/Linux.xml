@@ -1,0 +1,100 @@
+<!--
+This is only a reference, do not define this domain right away!
+
+This xml is defined with
+* only 1GB of RAM, change to the desired amount in these tags: memory, currentMemory
+* only 1 CPU core, change to the desired amount in these tags: vcpu, topology (topology-cores * topology-threads should equal vcpu)
+* only the 1st core pinned to the 1st cpu thread available, add more until you have one for each vcpu defined
+
+You also have to replace the these values
+::OVMF-PATH:: with the path to "OVMF_CODE.fd" on your system (for instance /path/to/OVMF_CODE.fd, on Arch is /usr/share/ovmf/x64/OVMF_CODE.fd, on Fedora is /usr/share/edk2/ovmf/OVMF_CODE.fd)
+::NVRAM-PATH:: with the path where you want to store the *_VARS.fd for this vm (for instance /path/to/NVRAM/Linux_VARS.fd)
+::QCOW2-PATH:: with the path where you have an existing qcow2 file that will be the system drive for this vm (for instance /path/to/Linux.qcow2)
+::CDR-PATH:: with the path where you have an iso file you wish to use in the vm, an iso installer usually (for instance /path/to/Linux.iso)
+::MAC-ADDR:: with the desired MAC address for the virtual network card (for instance 52:54:00:d2:d3:3d)
+::VROM-PATH:: with the path where you have the rom file for the graphics card (for instance /path/to/AMD-RX-460-Gigabyte-Windforce-OC-2G-F63.rom, on Fedora you may want to put this file on a folder that the qemu user can access, like /usr/share/libvirt)
+::PST-DEVS:: with the xml code that specifies the devices being passed through (found on subfolders of this folder)
+-->
+
+<domain type='kvm'>
+  <name>Linux</name>
+  <uuid>1dd3d64e-1e37-40ee-9876-e891ecabc4e7</uuid>
+  <memory unit='MiB'>1024</memory>
+  <currentMemory unit='MiB'>1024</currentMemory>
+  <vcpu placement='static'>1</vcpu>
+  <cputune>
+    <vcpupin vcpu='0' cpuset='0'/>
+    <emulatorsched scheduler='rr' priority='1'/>
+  </cputune>
+  <os>
+    <type arch='x86_64' machine='pc-i440fx-4.0'>hvm</type>
+    <loader readonly='yes' type='pflash'>::OVMF-PATH::</loader>
+    <nvram>::NVRAM-PATH::</nvram>
+    <boot dev='hd'/>
+  </os>
+  <features>
+    <acpi/>
+    <apic/>
+    <vmport state='off'/>
+    <ioapic driver='kvm'/>
+  </features>
+  <cpu mode='host-model' check='none'>
+    <model fallback='allow'/>
+    <topology sockets='1' cores='1' threads='1'/>
+  </cpu>
+  <clock offset='utc'>
+    <timer name='rtc' tickpolicy='catchup'/>
+    <timer name='pit' tickpolicy='delay'/>
+    <timer name='hpet' present='yes'/>
+  </clock>
+  <on_poweroff>destroy</on_poweroff>
+  <on_reboot>restart</on_reboot>
+  <on_crash>destroy</on_crash>
+  <pm>
+    <suspend-to-mem enabled='no'/>
+    <suspend-to-disk enabled='no'/>
+  </pm>
+  <devices>
+    <emulator>/usr/bin/qemu-system-x86_64</emulator>
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2' cache='none' discard='ignore' detect_zeroes='off'/>
+      <source file='::QCOW2-PATH::'/>
+      <target dev='vda' bus='virtio'/>
+    </disk>
+    <disk type='file' device='cdrom'>
+      <driver name='qemu' type='raw'/>
+      <source file='::CDR-PATH::'/>
+      <target dev='sda' bus='sata'/>
+      <readonly/>
+    </disk>
+    <interface type='network'>
+      <mac address='::MAC-ADDR::'/>
+      <source network='default'/>
+      <model type='virtio'/>
+    </interface>
+    <input type='mouse' bus='ps2'/>
+    <input type='keyboard' bus='ps2'/>
+    <controller type='usb' index='0' model='ich9-ehci1'>
+    </controller>
+    <controller type='usb' index='0' model='ich9-uhci1'>
+      <master startport='0'/>
+    </controller>
+    <controller type='usb' index='0' model='ich9-uhci2'>
+      <master startport='2'/>
+    </controller>
+    <controller type='usb' index='0' model='ich9-uhci3'>
+      <master startport='4'/>
+    </controller>
+    <controller type='pci' index='0' model='pci-root'/>
+    <controller type='sata' index='0'>
+    </controller>
+    <controller type='scsi' index='0' model='virtio-scsi'>
+    </controller>
+    ::PST-DEVS::
+    <memballoon model='virtio'>
+    </memballoon>
+    <rng model='virtio'>
+      <backend model='random'>/dev/urandom</backend>
+    </rng>
+  </devices>
+</domain>
