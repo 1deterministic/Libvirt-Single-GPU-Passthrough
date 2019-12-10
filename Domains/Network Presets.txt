@@ -6,8 +6,8 @@
     </interface>
     
     # bridged network
-    <interface type="direct">
-      <mac address="::MAC-ADDR::"/>
-      <source dev="::NET-DEV::" mode="bridge"/>
-      <model type="virtio"/>
+    <interface type='direct'>
+      <mac address='::MAC-ADDR::'/>
+      <source dev='::NET-DEV::' mode='bridge'/>
+      <model type='virtio'/>
     </interface>

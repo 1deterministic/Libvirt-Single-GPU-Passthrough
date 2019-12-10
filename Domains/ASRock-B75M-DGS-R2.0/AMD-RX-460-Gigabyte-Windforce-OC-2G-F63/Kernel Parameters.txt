@@ -1,0 +1,3 @@
+# I can start VMs with amdgpu.dc=1 but sometimes the host OS fails to start the display manager again, also failing to shutdown correctly when pressing the power button.
+
+amdgpu.dc=0

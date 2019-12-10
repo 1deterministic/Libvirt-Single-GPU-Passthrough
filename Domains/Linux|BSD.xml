@@ -8,26 +8,27 @@ This xml is defined with
 
 You also have to replace the these values
 ::OVMF-PATH:: with the path to "OVMF_CODE.fd" on your system (for instance /path/to/OVMF_CODE.fd, on Arch is /usr/share/ovmf/x64/OVMF_CODE.fd, on Fedora is /usr/share/edk2/ovmf/OVMF_CODE.fd)
-::NVRAM-PATH:: with the path where you want to store the *_VARS.fd for this vm (for instance /path/to/NVRAM/BSD_VARS.fd)
-::QCOW2-PATH:: with the path where you have an existing qcow2 file that will be the system drive for this vm (for instance /path/to/BSD.qcow2)
-::CDR-PATH:: with the path where you have an iso file you wish to use in the vm, an iso installer usually (for instance /path/to/BSD.iso)
+::NVRAM-PATH:: with the path where you want to store the *_VARS.fd for this vm (for instance /path/to/NVRAM/Linux|BSD_VARS.fd)
+::QCOW2-PATH:: with the path where you have an existing qcow2 file that will be the system drive for this vm (for instance /path/to/Linux|BSD.qcow2)
+::CDR-PATH:: with the path where you have an iso file you wish to use in the vm, an iso installer usually (for instance /path/to/Linux|BSD.iso)
 ::MAC-ADDR:: with the desired MAC address for the virtual network card (for instance 52:54:00:d2:d3:3d)
 ::VROM-PATH:: with the path where you have the rom file for the graphics card (for instance /path/to/AMD-RX-460-Gigabyte-Windforce-OC-2G-F63.rom, on Fedora you may want to put this file on a folder that the qemu user can access, like /usr/share/libvirt)
 ::PST-DEVS:: with the xml code that specifies the devices being passed through (found on subfolders of this folder)
 -->
 
 <domain type='kvm'>
-  <name>BSD</name>
-  <uuid>e1c760ed-cf76-4305-a194-d8a7e3c0abee</uuid>
+  <name>Linux|BSD</name>
+  <uuid>1dd3d64e-1e37-40ee-9876-e891ecabc4e7</uuid>
   <memory unit='MiB'>1024</memory>
   <currentMemory unit='MiB'>1024</currentMemory>
   <vcpu placement='static'>1</vcpu>
+  <iothreads>1</iothreads>
   <cputune>
     <vcpupin vcpu='0' cpuset='0'/>
-    <emulatorsched scheduler='rr' priority='1'/>
+    <iothreadpin iothread='1' cpuset='0'/>
   </cputune>
   <os>
-    <type arch='x86_64' machine='pc-i440fx-4.0'>hvm</type>
+    <type arch='x86_64' machine='pc-i440fx-4.1'>hvm</type>
     <loader readonly='yes' type='pflash'>::OVMF-PATH::</loader>
     <nvram>::NVRAM-PATH::</nvram>
     <boot dev='hd'/>
@@ -39,8 +40,8 @@ You also have to replace the these values
     <ioapic driver='kvm'/>
   </features>
   <cpu mode='host-model' check='none'>
-    <model fallback='allow'/>
     <topology sockets='1' cores='1' threads='1'/>
+    <cache level='3' mode='emulate'/>
   </cpu>
   <clock offset='utc'>
     <timer name='rtc' tickpolicy='catchup'/>
@@ -57,7 +58,7 @@ You also have to replace the these values
   <devices>
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
     <disk type='file' device='disk'>
-      <driver name='qemu' type='qcow2' cache='none' discard='ignore' detect_zeroes='off'/>
+      <driver name='qemu' type='qcow2' cache='none' discard='ignore' detect_zeroes='off' iothread='1'/>
       <source file='::QCOW2-PATH::'/>
       <target dev='vda' bus='virtio'/>
     </disk>

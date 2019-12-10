@@ -23,12 +23,13 @@ You also have to replace the these values
   <memory unit='MiB'>1024</memory>
   <currentMemory unit='MiB'>1024</currentMemory>
   <vcpu placement='static'>1</vcpu>
+  <iothreads>1</iothreads>
   <cputune>
     <vcpupin vcpu='0' cpuset='0'/>
-    <emulatorsched scheduler='rr' priority='1'/>
+    <iothreadpin iothread='1' cpuset='0'/>
   </cputune>
   <os>
-    <type arch='x86_64' machine='pc-q35-4.0'>hvm</type>
+    <type arch='x86_64' machine='pc-q35-4.1'>hvm</type>
     <loader readonly='yes' type='pflash'>::OVMF-PATH::</loader>
     <nvram>::NVRAM-PATH::</nvram>
     <boot dev='hd'/>
@@ -39,20 +40,38 @@ You also have to replace the these values
     <hyperv>
       <relaxed state='on'/>
       <vapic state='on'/>
-      <spinlocks state='on' retries='8191'/>
+      <spinlocks state='on' retries='16384'/>
       <vendor_id state='on' value='0123456789ab'/>
+      <vpindex state='on'/>
+      <runtime state='on'/>
+      <synic state='on'/>
+      <stimer state='on'/>
+      <reset state='on'/>
+      <vendor_id state='on' value='other'/>
+      <frequencies state='on'/>
+      <reenlightenment state='on'/>
+      <tlbflush state='on'/>
+      <ipi state='off'/>
+      <evmcs state='off'/>
     </hyperv>
     <vmport state='off'/>
     <ioapic driver='kvm'/>
+    <kvm>
+      <hidden state='on'/>
+    </kvm>
   </features>
   <cpu mode='host-model' check='none'>
     <topology sockets='1' cores='1' threads='1'/>
+    <cache level='3' mode='emulate'/>
+    <feature policy='require' name='topoext'/>
+    <feature policy='require' name='invtsc'/>
   </cpu>
   <clock offset='localtime'>
     <timer name='rtc' tickpolicy='catchup'/>
     <timer name='pit' tickpolicy='delay'/>
     <timer name='hpet' present='yes'/>
     <timer name='hypervclock' present='yes'/>
+    <timer name='tsc' present='yes' mode='native'/>
   </clock>
   <on_poweroff>destroy</on_poweroff>
   <on_reboot>restart</on_reboot>
@@ -64,7 +83,7 @@ You also have to replace the these values
   <devices>
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
     <disk type='file' device='disk'>
-      <driver name='qemu' type='qcow2' cache='none' discard='ignore' detect_zeroes='off'/>
+      <driver name='qemu' type='qcow2' cache='none' discard='ignore' detect_zeroes='off' iothread='1'/>
       <source file='::QCOW2-PATH::'/>
       <target dev='vda' bus='virtio'/>
     </disk>
@@ -87,7 +106,6 @@ You also have to replace the these values
     </interface>
     <input type='mouse' bus='ps2'/>
     <input type='keyboard' bus='ps2'/>
-    </controller>
     ::PST-DEVS::
     <memballoon model='virtio'>
     </memballoon>

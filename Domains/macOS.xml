@@ -26,9 +26,10 @@ You also have to replace the these values
   <memory unit='MiB'>1024</memory>
   <currentMemory unit='MiB'>1024</currentMemory>
   <vcpu placement='static'>1</vcpu>
+  <iothreads>1</iothreads>
   <cputune>
     <vcpupin vcpu='0' cpuset='0'/>
-    <emulatorsched scheduler='rr' priority='1'/>
+    <iothreadpin iothread='1' cpuset='0'/>
   </cputune>
   <os>
     <type arch='x86_64' machine='pc-q35-3.0'>hvm</type>
@@ -42,6 +43,7 @@ You also have to replace the these values
   </features>
   <cpu>
     <topology sockets='1' cores='1' threads='1'/>
+    <cache level='3' mode='emulate'/>
   </cpu>
   <clock offset='utc'>
     <timer name='rtc' tickpolicy='catchup'/>
@@ -58,7 +60,7 @@ You also have to replace the these values
   <devices>
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
     <disk type='file' device='disk'>
-      <driver name='qemu' type='qcow2' cache='none' discard='ignore' detect_zeroes='off'/>
+      <driver name='qemu' type='qcow2' cache='none' discard='ignore' detect_zeroes='off' iothread='1'/>
       <source file='::BOOT-PATH::'/>
       <target dev='sda' bus='sata'/>
       <boot order='1'/>
