@@ -28,8 +28,9 @@ You also have to replace the these values
   <vcpu placement='static'>1</vcpu>
   <iothreads>1</iothreads>
   <cputune>
-    <vcpupin vcpu='0' cpuset='0'/>
+    <emulatorpin cpuset="0"/>
     <iothreadpin iothread='1' cpuset='0'/>
+    <vcpupin vcpu='0' cpuset='0'/>
   </cputune>
   <os>
     <type arch='x86_64' machine='pc-q35-3.0'>hvm</type>
@@ -88,8 +89,6 @@ You also have to replace the these values
     <console type='pty'>
       <target type='serial' port='0'/>
     </console>
-    <input type='mouse' bus='ps2'/>
-    <input type='keyboard' bus='ps2'/>
     ::PST-DEVS::
     <memballoon model='none'/>
   </devices>
