@@ -1,0 +1,70 @@
+    # qcow2 sata disk
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='::QCOW2-PATH::'/>
+      <target dev='sda' bus='sata'/>
+    </disk>
+
+    # qcow2 scsi disk
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='::QCOW2-PATH::'/>
+      <target dev='sda' bus='scsi'/>
+    </disk>
+    
+    # qcow2 virtio disk
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2'/>
+      <source file='::QCOW2-PATH::'/>
+      <target dev='vda' bus='virtio'/>
+    </disk>
+    
+    # raw sata disk
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='raw'/>
+      <source file='::IMG-PATH::'/>
+      <target dev='sda' bus='sata'/>
+    </disk>
+
+    # raw scsi disk
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='raw'/>
+      <source file='::IMG-PATH::'/>
+      <target dev='sda' bus='scsi'/>
+    </disk>
+    
+    # raw virtio disk
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='raw'/>
+      <source file='::IMG-PATH::'/>
+      <target dev='vda' bus='virtio'/>
+    </disk>
+
+    # iso sata cdrom
+    <disk type='file' device='cdrom'>
+      <driver name='qemu' type='raw'/>
+      <source file='::ISO-PATH::'/>
+      <target dev='sda' bus='sata'/>
+      <readonly/>
+    </disk>
+
+    # physical sata disk
+    <disk type='block' device='disk'>
+      <driver name='qemu' type='raw'/>
+      <source file='::DEV-PATH::'/>
+      <target dev='sda' bus='sata'/>
+    </disk>
+
+    # physical scsi disk
+    <disk type='block' device='disk'>
+      <driver name='qemu' type='raw'/>
+      <source file='::DEV-PATH::'/>
+      <target dev='sda' bus='scsi'/>
+    </disk>
+
+    # physical virtio disk
+    <disk type='block' device='disk'>
+      <driver name='qemu' type='raw'/>
+      <source dev='::DEV-PATH::'/>
+      <target dev='vda' bus='virtio'/>
+    </disk>

@@ -1,20 +1,27 @@
-    # nat network
+    # nat virtio network
     <interface type='network'>
       <mac address='::MAC-ADDR::'/>
       <source network='default'/>
       <model type='virtio'/>
     </interface>
+    
+    # bridged virtio network
+    <interface type='direct'>
+      <mac address='::MAC-ADDR::'/>
+      <source dev='::NET-DEV::' mode='bridge'/>
+      <model type='virtio'/>
+    </interface>
 
-    # nat network for a macOS vm
+    # nat e1000 network (use this in a macOS vm)
     <interface type='network'>
       <mac address='::MAC-ADDR::'/>
       <source network='default'/>
       <model type='e1000-82545em'/>
     </interface>
-    
-    # bridged network
+
+    # bridged e1000 network (use this in a macOS vm)
     <interface type='direct'>
       <mac address='::MAC-ADDR::'/>
       <source dev='::NET-DEV::' mode='bridge'/>
-      <model type='virtio'/>
+      <model type='e1000-82545em'/>
     </interface>
