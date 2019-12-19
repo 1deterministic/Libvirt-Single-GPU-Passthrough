@@ -43,17 +43,6 @@ You also have to replace the these values
       <vapic state='on'/>
       <spinlocks state='on' retries='16384'/>
       <vendor_id state='on' value='0123456789ab'/>
-      <vpindex state='on'/>
-      <runtime state='on'/>
-      <synic state='on'/>
-      <stimer state='on'/>
-      <reset state='on'/>
-      <vendor_id state='on' value='other'/>
-      <frequencies state='on'/>
-      <reenlightenment state='on'/>
-      <tlbflush state='on'/>
-      <ipi state='off'/>
-      <evmcs state='off'/>
     </hyperv>
     <vmport state='off'/>
     <ioapic driver='kvm'/>
