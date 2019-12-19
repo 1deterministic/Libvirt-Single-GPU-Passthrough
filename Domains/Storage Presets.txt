@@ -1,32 +1,32 @@
-# qcow2 scsi disk
+    # qcow2 scsi disk
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2' cache='default' discard='ignore' detect_zeroes='unmap'/>
       <source file='/path/to/file.qcow2'/>
       <target dev='sda' bus='scsi'/>
     </disk>
     
-# qcow2 virtio disk
+    # qcow2 virtio disk
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2' cache='default' discard='ignore' detect_zeroes='off'/>
       <source file='/path/to/file.qcow2'/>
       <target dev='vda' bus='virtio'/>
     </disk>
     
-# raw virtio disk
+    # raw virtio disk
     <disk type='file' device='disk'>
         <driver name='qemu' type='raw' cache='default' discard='ignore' detect_zeroes='off'/>
         <source file='/path/to/file.img'/>
         <target dev='vda' bus='virtio'/>
     </disk>
     
-# physical virtio disk
+    # physical virtio disk
     <disk type='block' device='disk'>
         <driver name='qemu' type='raw'/>
         <source dev='/dev/path/to/disk'/>
         <target dev='vda' bus='virtio'/>
     </disk>
 
-# sata cdrom
+    # sata cdrom
     <disk type='file' device='cdrom'>
       <driver name='qemu' type='raw'/>
       <source file='/path/to/file.iso'/>

@@ -4,6 +4,13 @@
       <source network='default'/>
       <model type='virtio'/>
     </interface>
+
+    # nat network for a macOS vm
+    <interface type='network'>
+      <mac address='::MAC-ADDR::'/>
+      <source network='default'/>
+      <model type='e1000-82545em'/>
+    </interface>
     
     # bridged network
     <interface type='direct'>

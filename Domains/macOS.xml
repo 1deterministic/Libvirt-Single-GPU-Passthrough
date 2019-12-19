@@ -1,37 +1,10 @@
-<!--
-This is only a reference, do not define this domain right away!
-
-This .xml and the files Firmware/OVMF_MAC.fd and Bootloaders/Clover.qcow2 were created using https://github.com/foxlet/macOS-Simple-KVM, wich I suggest for getting the install images (and also creating domains, it is really awesome)
-
-This xml is defined with
-* only 1GB of RAM, change to the desired amount in these tags: memory, currentMemory
-* only 1 CPU core, change to the desired amount in these tags: vcpu, topology (topology-cores * topology-threads should equal vcpu)
-* only the 1st core pinned to the 1st cpu thread available, add more until you have one for each vcpu defined
-* no usb devices as macOS didn't play well when passing through the usb controllers. You will have to use the virt-manager interface to add the devices you want manually
-
-You also have to replace the these values
-::OVMF-PATH:: with the path to "OVMF_MAC.fd" on your system (for instance /path/to/OVMF_MAC.fd, on Fedora is /usr/share/edk2/ovmf/OVMF_CODE.fd) THIS IS NOT THE SAME AS OVMF_CODE!!! USE THE ONE INSIDE THE FOLDER "Firmware" OR GET ONE WITH macOS-Simple-KVM
-::NVRAM-PATH:: with the path where you want to store the *_VARS.fd for this vm (for instance /path/to/NVRAM/macOS_VARS.fd)
-::BOOT-PATH:: with the path where you have the Clover bootloader (for instance /path/to/Clover.qcow2, it is included in the Bootloaders folder)
-::QCOW2-PATH:: with the path where you have an existing qcow2 file that will be the system drive for this vm (for instance /path/to/macOS.qcow2)
-::CDR-PATH:: with the path where you have an iso file you wish to use in the vm, an img installer usually (for instance /path/to/macOS.img)
-::MAC-ADDR:: with the desired MAC address for the virtual network card (for instance 52:54:00:d2:d3:3d)
-::VROM-PATH:: with the path where you have the rom file for the graphics card (for instance /path/to/AMD-RX-460-Gigabyte-Windforce-OC-2G-F63.rom, on Fedora you may want to put this file on a folder that the qemu user can access, like /usr/share/libvirt)
-::PST-DEVS:: with the xml code that specifies the devices being passed through (found on subfolders of this folder)
--->
-
 <domain type='kvm' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
   <name>macOS</name>
-  <uuid>918ab29c-6cdf-4f9e-8008-85806ac8f901</uuid>
-  <memory unit='MiB'>1024</memory>
-  <currentMemory unit='MiB'>1024</currentMemory>
-  <vcpu placement='static'>1</vcpu>
-  <iothreads>1</iothreads>
-  <cputune>
-    <emulatorpin cpuset="0"/>
-    <iothreadpin iothread='1' cpuset='0'/>
-    <vcpupin vcpu='0' cpuset='0'/>
-  </cputune>
+  <uuid>::DOM-UUID::</uuid>
+  <memory unit='MiB'>::RAM-AMOUNT::</memory>
+  <currentMemory unit='MiB'>::RAM-AMOUNT::</currentMemory>
+  <vcpu placement='static'>::THREAD-COUNT::</vcpu>
+  <cputune></cputune>
   <os>
     <type arch='x86_64' machine='pc-q35-3.0'>hvm</type>
     <loader readonly='yes' type='pflash'>::OVMF-PATH::</loader>
@@ -43,7 +16,7 @@ You also have to replace the these values
     <vmport state='off'/>
   </features>
   <cpu>
-    <topology sockets='1' cores='1' threads='1'/>
+    <topology sockets='1' cores='::CORE-COUNT::' threads='::THREADS-PER-CORE::'/>
     <cache level='3' mode='emulate'/>
   </cpu>
   <clock offset='utc'>
@@ -61,26 +34,14 @@ You also have to replace the these values
   <devices>
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
     <disk type='file' device='disk'>
-      <driver name='qemu' type='qcow2' cache='none' discard='ignore' detect_zeroes='off' iothread='1'/>
+      <driver name='qemu' type='qcow2' cache='default' discard='ignore' detect_zeroes='off'/>
       <source file='::BOOT-PATH::'/>
       <target dev='sda' bus='sata'/>
       <boot order='1'/>
     </disk>
-    <disk type='file' device='disk'>
-      <driver name='qemu' type='qcow2' cache='none' discard='ignore' detect_zeroes='off'/>
-      <source file='::QCOW2-PATH::'/>
-      <target dev='sdb' bus='sata'/>
-    </disk>
-    <disk type='file' device='disk'>
-      <driver name='qemu' type='raw'/>
-      <source file='::CDR-PATH::'/>
-      <target dev='sdc' bus='sata'/>
-    </disk>
-    <interface type='network'>
-      <mac address='::MAC-ADDR::'/>
-      <source network='default'/>
-      <model type='e1000-82545em'/>
-    </interface>
+    ::DOM-DISKS::
+    ::DOM-NETS::
+    ::PST-DEVS::
     <serial type='pty'>
       <target type='isa-serial' port='0'>
         <model name='isa-serial'/>
@@ -89,7 +50,6 @@ You also have to replace the these values
     <console type='pty'>
       <target type='serial' port='0'/>
     </console>
-    ::PST-DEVS::
     <memballoon model='none'/>
   </devices>
   <qemu:commandline>
