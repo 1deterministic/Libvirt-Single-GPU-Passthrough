@@ -6,5 +6,5 @@ An USB controller is required to use per-device usb passthrough, you can use uhc
     <vendor id='::VENDORID::'/>
     <product id='::PRODUCTID::'/>
   </source>
-  <address type='usb' bus='0' port='::PORTNUMBER(1+)::'/>
+  <address type='usb' bus='0' port='::PORTNUMBER::'/>
 </hostdev>
