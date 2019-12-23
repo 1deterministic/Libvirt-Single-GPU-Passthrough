@@ -1,0 +1,5 @@
+<disk type='file' device='disk'>
+  <driver name='qemu' type='raw'/>
+  <source file='::IMG::'/>
+  <target dev='sda' bus='sata'/>
+</disk>

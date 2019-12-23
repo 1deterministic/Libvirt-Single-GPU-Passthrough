@@ -1,0 +1,6 @@
+<disk type='file' device='cdrom'>
+  <driver name='qemu' type='raw'/>
+  <source file='::ISO::'/>
+  <target dev='sda' bus='sata'/>
+  <readonly/>
+</disk>

@@ -1,0 +1,10 @@
+<!--
+An USB controller is required to use per-device usb passthrough, you can use uhci1.xml in the same folder as this file, for instance
+-->
+<hostdev mode='subsystem' type='usb' managed='yes'>
+  <source>
+    <vendor id='::VENDORID::'/>
+    <product id='::PRODUCTID::'/>
+  </source>
+  <address type='usb' bus='0' port='::PORTNUMBER(1+)::'/>
+</hostdev>
