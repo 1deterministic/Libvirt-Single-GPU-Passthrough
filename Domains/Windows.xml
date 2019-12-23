@@ -1,14 +1,14 @@
 <domain type='kvm'>
-  <name>Windows</name>
-  <uuid>::DOM-UUID::</uuid>
-  <memory unit='MiB'>::RAM-AMOUNT::</memory>
-  <currentMemory unit='MiB'>::RAM-AMOUNT::</currentMemory>
-  <vcpu placement='static'>::THREAD-COUNT::</vcpu>
+  <name>::NAME::</name>
+  <uuid>::UUID::</uuid>
+  <memory unit='MiB'>::RAM::</memory>
+  <currentMemory unit='MiB'>::RAM::</currentMemory>
+  <vcpu placement='static'>::THREADS::</vcpu>
   <cputune></cputune>
   <os>
     <type arch='x86_64' machine='pc-q35-4.1'>hvm</type>
-    <loader readonly='yes' type='pflash'>::OVMF-PATH::</loader>
-    <nvram>::NVRAM-PATH::</nvram>
+    <loader readonly='yes' type='pflash'>::OVMF::</loader>
+    <nvram>::NVRAM::</nvram>
     <boot dev='hd'/>
   </os>
   <features>
@@ -27,7 +27,7 @@
     </kvm>
   </features>
   <cpu mode='host-model' check='none'>
-    <topology sockets='1' cores='::CORE-COUNT::' threads='::THREADS-PER-CORE::'/>
+    <topology sockets='1' cores='::CORES::' threads='::SMT::'/>
     <cache level='3' mode='emulate'/>
     <feature policy='require' name='topoext'/>
     <feature policy='require' name='invtsc'/>
@@ -48,9 +48,7 @@
   </pm>
   <devices>
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
-    ::DOM-DISKS::
-    ::DOM-NETS::
-    ::PST-DEVS::
+    ::DEVICES::
     <memballoon model='virtio'></memballoon>
   </devices>
 </domain>
