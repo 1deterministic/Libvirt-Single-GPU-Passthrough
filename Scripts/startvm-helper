@@ -11,13 +11,13 @@ if [ "$1" == "" ]; then echo "VM name not specified"; exit 1; fi
 
 sleep 5
 
-# changes to another tty
-chvt 3; sleep 1
-pkill -KILL -u "$2"; sleep 1
-
 # stops the display manager
 systemctl stop display-manager
 sleep 3
+
+# changes to another tty
+chvt 3; sleep 1
+pkill -KILL -u "$2"; sleep 1
 
 # changes the cpu frequency governor to performance
 systemctl start perfgovernor
