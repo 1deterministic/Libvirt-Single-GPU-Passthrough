@@ -3,3 +3,5 @@ Fedora 31 seems to have none of the random host lockups I was getting with Arch,
 
 I am able to run the cpu at the maximum clock speed with these parameters and perfgovernor active
   intel_idle.max_cstate=1 processor.max_cstate=1
+
+For some reason 5.4 kernels in Fedora 31 crash the host when starting up passthrough virtual machines for the 3rd time without rebooting, 5.3.16 does not have this issue
