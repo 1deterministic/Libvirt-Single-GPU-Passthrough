@@ -5,7 +5,9 @@ rm "/etc/systemd/system/perfgovernor.service"
 systemctl daemon-reload
 
 # removes the helper script
-rm "/usr/sbin/startvm-helper"
+rm "/usr/bin/startvm-helper"
 
 # removes the starting script
-rm "/usr/sbin/startvm"
+rm "/usr/bin/startvm"
+
+echo "Done!"

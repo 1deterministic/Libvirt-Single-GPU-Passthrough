@@ -1,4 +1,4 @@
-Fedora 31 seems to have none of the random host lockups I was getting with Arch, so for now I will recommend running Fedora instead with this hardware setup
+Arch Linux using the OVMF from Fedora 31 or Fedora 31 with kernel 5.3.x seems to be the best working setups
   intel_iommu=on iommu=pt kvm.ignore_msrs=1 kvm.report_ignored_msrs=0
 
 I am able to run the cpu at the maximum clock speed with these parameters and perfgovernor active
