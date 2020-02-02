@@ -13,7 +13,7 @@ sleep 5
 
 # stops the display manager
 systemctl stop display-manager
-sleep 3
+sleep 5
 
 # changes to another tty
 chvt 3; sleep 1
@@ -26,7 +26,7 @@ systemctl start perfgovernor
 virsh start "$1"
 
 # waits some time before checking if its still running
-sleep 3
+sleep 5
 
 # checks if the vm is still running every 5 seconds
 while [ $(echo ${words[@]} | grep -o $(virsh list --all | grep " $1 " | awk '{ print $3}') | wc -w) == 1 ]; do sleep 5; done
@@ -34,8 +34,8 @@ while [ $(echo ${words[@]} | grep -o $(virsh list --all | grep " $1 " | awk '{ p
 # changes the cpu frequency governor back to powersave
 systemctl stop perfgovernor
 
-# waits 10 seconds for the gpu to be returned to the host
-sleep 3
+# waits 5 seconds for the gpu to be returned to the host
+sleep 5
 
 # starts the display manager again
 systemctl start display-manager
