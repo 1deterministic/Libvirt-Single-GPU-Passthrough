@@ -28,7 +28,7 @@
   </features>
   <cpu mode='host-model' check='none'>
     <topology sockets='1' cores='::CORES::' threads='::SMT::'/>
-    <cache level='3' mode='emulate'/>
+    <cache mode='disable'/>
     <feature policy='require' name='topoext'/>
     <feature policy='require' name='invtsc'/>
   </cpu>

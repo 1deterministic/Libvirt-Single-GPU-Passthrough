@@ -17,7 +17,7 @@
   </features>
   <cpu>
     <topology sockets='1' cores='::CORES::' threads='::SMT::'/>
-    <cache level='3' mode='emulate'/>
+    <cache mode='disable'/>
   </cpu>
   <clock offset='utc'>
     <timer name='rtc' tickpolicy='catchup'/>
