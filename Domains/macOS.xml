@@ -1,8 +1,6 @@
 <domain type='kvm' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
   <name>::NAME::</name>
-  <uuid>::UUID::</uuid>
   <memory unit='MiB'>::RAM::</memory>
-  <currentMemory unit='MiB'>::RAM::</currentMemory>
   <vcpu placement='static'>::THREADS::</vcpu>
   <cputune></cputune>
   <os>
@@ -11,8 +9,7 @@
     <nvram>::NVRAM::</nvram><!-- Use NVRAM/APPLE-VARS.fd as the file here -->
   </os>
   <features>
-    <acpi/>
-    <apic/>
+    <acpi/><apic/>
     <vmport state='off'/>
   </features>
   <cpu>

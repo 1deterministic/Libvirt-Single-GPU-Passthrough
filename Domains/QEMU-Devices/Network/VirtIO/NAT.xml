@@ -1,5 +1,4 @@
 <interface type='network'>
-  <mac address='::MACADDR::'/>
   <source network='default'/>
   <model type='virtio'/>
 </interface>

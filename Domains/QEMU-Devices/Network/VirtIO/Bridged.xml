@@ -1,5 +1,4 @@
 <interface type='direct'>
-  <mac address='::MACADDR::'/>
   <source dev='::INTERFACE::' mode='bridge'/>
   <model type='virtio'/>
 </interface>

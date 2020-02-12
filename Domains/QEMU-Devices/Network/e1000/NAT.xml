@@ -1,5 +1,4 @@
 <interface type='network'>
-  <mac address='::MACADDR::'/>
   <source network='default'/>
   <model type='e1000-82545em'/>
 </interface>

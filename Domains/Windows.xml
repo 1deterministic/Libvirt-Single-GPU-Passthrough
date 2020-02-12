@@ -1,8 +1,6 @@
 <domain type='kvm'>
   <name>::NAME::</name>
-  <uuid>::UUID::</uuid>
   <memory unit='MiB'>::RAM::</memory>
-  <currentMemory unit='MiB'>::RAM::</currentMemory>
   <vcpu placement='static'>::THREADS::</vcpu>
   <cputune></cputune>
   <os>
@@ -12,8 +10,7 @@
     <boot dev='hd'/>
   </os>
   <features>
-    <acpi/>
-    <apic/>
+    <acpi/><apic/>
     <hyperv>
       <relaxed state='on'/>
       <vapic state='on'/>

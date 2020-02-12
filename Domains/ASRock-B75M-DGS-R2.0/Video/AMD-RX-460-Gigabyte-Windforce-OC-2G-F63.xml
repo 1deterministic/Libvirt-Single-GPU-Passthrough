@@ -1,8 +1,6 @@
 <!--
 You may need to use the following kernel parameter if you run into issues getting the display manager to start again when shutting down the virtual machine:
   amdgpu.dc=0
-  
-On Fedora 31 I am able to use amdgpu.dc=1 (the default value) without an issue but couldn't do it on Arch, not sure why.
 
 The first device here is the graphics card and the second one is the hdmi audio output
 -->
