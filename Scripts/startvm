@@ -2,4 +2,4 @@
 
 if [ $(whoami) == "root" ]; then echo "Please run this script as a regular user, it should ask for permissions when appropriate"; exit 1; fi
 
-sudo su -c "startvm-helper $1 $(whoami) & disown"
+sudo su -c "startvm-helper $1 $(whoami) &"

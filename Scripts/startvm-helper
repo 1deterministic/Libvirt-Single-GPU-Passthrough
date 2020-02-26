@@ -1,7 +1,9 @@
 #!/usr/bin/bash
 
 # virsh applies localization to returned values, this array should contain equivalents to 'running' in different languages
-words=("running" "executando") # en-us, pt-br
+# en-us, pt-br
+shutoff=("shutoff" "desligado")
+running=("running" "executando")
 
 # stops if not running as root
 if [ ! $(whoami) == "root" ]; then echo "Not root"; exit 1; fi
@@ -9,6 +11,10 @@ if [ ! $(whoami) == "root" ]; then echo "Not root"; exit 1; fi
 # stops if the vm name was not specified
 if [ "$1" == "" ]; then echo "VM name not specified"; exit 1; fi
 
+# prevents starting a running or inexistent vm
+if [ ! $(echo ${shutoff[@]} | grep -o $(virsh list --state-shutoff | grep " $1 " | awk '{ print $3}') | wc -w) == 1 ]; then echo "VM is not available"; exit 1; fi
+
+echo "Logging out in 5 seconds... You can ctrl+d if you want"
 sleep 5
 
 # stops the display manager
@@ -16,7 +22,7 @@ systemctl stop display-manager
 sleep 5
 
 # changes to another tty
-chvt 3; sleep 1
+chvt 5; sleep 1
 pkill -KILL -u "$2"; sleep 1
 
 # changes the cpu frequency governor to performance
@@ -29,7 +35,7 @@ virsh start "$1"
 sleep 5
 
 # checks if the vm is still running every 5 seconds
-while [ $(echo ${words[@]} | grep -o $(virsh list --all | grep " $1 " | awk '{ print $3}') | wc -w) == 1 ]; do sleep 5; done
+while [ $(echo ${running[@]} | grep -o $(virsh list --state-running | grep " $1 " | awk '{ print $3}') | wc -w) == 1 ]; do sleep 5; done
 
 # changes the cpu frequency governor back to powersave
 systemctl stop perfgovernor
