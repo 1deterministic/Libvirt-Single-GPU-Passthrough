@@ -1,5 +1,9 @@
 #!/usr/bin/bash
 
+# if this usb device is connected to the host the vm will be terminated (the host must not have crashed and the usb port must not be passed through to the guest)
+killswitchVendorID=""
+killswitchProductId=""
+
 # virsh applies localization to returned values, this array should contain equivalents to 'running' in different languages
 # en-us, pt-br
 shutoff=("shutoff" "desligado")
@@ -35,7 +39,15 @@ virsh start "$1"
 sleep 5
 
 # checks if the vm is still running every 5 seconds
-while [ $(echo ${running[@]} | grep -o $(virsh list --state-running | grep " $1 " | awk '{ print $3}') | wc -w) == 1 ]; do sleep 5; done
+while [ $(echo ${running[@]} | grep -o $(virsh list --state-running | grep " $1 " | awk '{ print $3}') | wc -w) == 1 ]; do 
+    sleep 5
+    
+    if [[ $(awk '$2 == "Vendor='$killswitchVendorID'" && $3 == "ProdID='$killswitchProductId'" { print $0 }' /sys/kernel/debug/usb/devices) != "" ]]; then 
+        virsh destroy "$1"
+        sleep 5
+        break
+    fi
+done
 
 # changes the cpu frequency governor back to powersave
 systemctl stop perfgovernor
