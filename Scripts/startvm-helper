@@ -1,8 +1,8 @@
 #!/usr/bin/bash
 
 # if this usb device is connected to the host the vm will be terminated (the host must not have crashed and the usb port must not be passed through to the guest)
-killswitchVendorID=""
-killswitchProductId=""
+killswitchVendorID="XXXX"
+killswitchProductId="XXXX"
 
 # virsh applies localization to returned values, this array should contain equivalents to 'running' in different languages
 # en-us, pt-br
