@@ -1,59 +1,91 @@
 #!/usr/bin/bash
 
 # if this usb device is connected to the host the vm will be terminated (the host must not have crashed and the usb port must not be passed through to the guest)
-killswitchVendorID="XXXX"
-killswitchProductId="XXXX"
+killSwitchVendorID="XXXX"
+killSwitchProductId="XXXX"
 
-# virsh applies localization to returned values, this array should contain equivalents to 'running' in different languages
+# virsh applies localization to returned values, this array should contain equivalents to 'shutoff' in different languages
 # en-us, pt-br
-shutoff=("shutoff" "desligado")
-running=("running" "executando")
+shutoffWords=("shutoff" "desligado")
+
+# assumes the vm is not available
+isVMAvailable=0
+
+# assumes the vm is not running
+isVMRunning=0
 
 # stops if not running as root
-if [ ! $(whoami) == "root" ]; then echo "Not root"; exit 1; fi
+if [ ! $(whoami) == "root" ]; then
+    echo "This script should be run as root, as it needs to start and stop system services."
+    exit 1
+fi
 
 # stops if the vm name was not specified
-if [ "$1" == "" ]; then echo "VM name not specified"; exit 1; fi
+if [ "$1" == "" ]; then
+    echo "No virtual machine name specified."
+    exit 1
+fi
+
+# gets the availability of the vm
+for word in ${shutoffWords[@]}; do
+    if [[ $word == $(virsh domstate "$1") ]]; then
+        isVMAvailable=1
+        break
+    fi
+done
 
 # prevents starting a running or inexistent vm
-if [ ! $(echo ${shutoff[@]} | grep -o $(virsh list --state-shutoff | grep " $1 " | awk '{ print $3}') | wc -w) == 1 ]; then echo "VM is not available"; exit 1; fi
+if [[ $isVMAvailable != 1 ]]; then
+    echo "The specified virtual machine is not available"
+    exit 1
+fi
 
-echo "Logging out in 5 seconds... You can ctrl+d if you want"
-sleep 5
+# sends confirmation message
+echo "Finishing the display manager in 10 seconds, you can exit the terminal if you want"
+sleep 10
 
 # stops the display manager
 systemctl stop display-manager
 sleep 5
 
 # changes to another tty
-chvt 5; sleep 1
-pkill -KILL -u "$2"; sleep 1
+chvt 5; sleep 5
+pkill -KILL -u "$2"; sleep 5
 
 # changes the cpu frequency governor to performance
 systemctl start perfgovernor
 
 # starts the specified vm
 virsh start "$1"
+isVMRunning=1
 
-# waits some time before checking if its still running
+# waits some time before starting to check if the VM has stopped
 sleep 5
-
-# checks if the vm is still running every 5 seconds
-while [ $(echo ${running[@]} | grep -o $(virsh list --state-running | grep " $1 " | awk '{ print $3}') | wc -w) == 1 ]; do 
-    sleep 5
+# checks if the VM has stopped at every 5 seconds
+while [[ $isVMRunning == 1 ]]; do
+    # gets the vm running state
+    for word in ${shutoffWords[@]}; do
+        if [[ $word == $(virsh domstate "$1") ]]; then
+            isVMRunning=0
+            break
+        fi
+    done
     
-    if [[ $(awk '$2 == "Vendor='$killswitchVendorID'" && $3 == "ProdID='$killswitchProductId'" { print $0 }' /sys/kernel/debug/usb/devices) != "" ]]; then 
+    # checks the presence of the specified usb killswitch
+    if [[ $(awk '$2 == "Vendor='$killSwitchVendorID'" && $3 == "ProdID='$killSwitchProductId'" { print $0 }' /sys/kernel/debug/usb/devices) != "" ]]; then 
         virsh destroy "$1"
-        sleep 5
-        break
+        # don't interfere with isVMRunning here, wait for libvirt to kill the VM
     fi
+    
+    # waits some time before trying again
+    sleep 5
 done
-
-# changes the cpu frequency governor back to powersave
-systemctl stop perfgovernor
 
 # waits 5 seconds for the gpu to be returned to the host
 sleep 5
+
+# changes the cpu frequency governor back to powersave
+systemctl stop perfgovernor
 
 # starts the display manager again
 systemctl start display-manager
