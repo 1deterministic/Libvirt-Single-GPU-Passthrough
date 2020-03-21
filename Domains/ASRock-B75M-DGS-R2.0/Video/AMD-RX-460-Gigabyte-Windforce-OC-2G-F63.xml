@@ -14,5 +14,4 @@ The first device here is the graphics card and the second one is the hdmi audio 
   <source>
     <address domain='0x0000' bus='0x01' slot='0x00' function='0x1'/>
   </source>
-  <rom bar='on' file='::VROM::'/>
 </hostdev>
