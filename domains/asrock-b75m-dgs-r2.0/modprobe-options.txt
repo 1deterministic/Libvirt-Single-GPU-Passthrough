@@ -1,0 +1,5 @@
+options kvm ignore_msrs=1
+options kvm report_ignored_msrs=0
+
+# to enable nested virtualization use this
+options kvm_intel nested=1

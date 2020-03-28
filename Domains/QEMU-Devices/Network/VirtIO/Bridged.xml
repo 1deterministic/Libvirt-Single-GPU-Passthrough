@@ -1,4 +1,0 @@
-<interface type='direct'>
-  <source dev='::INTERFACE::' mode='bridge'/>
-  <model type='virtio'/>
-</interface>

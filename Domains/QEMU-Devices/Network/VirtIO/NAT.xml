@@ -1,4 +1,0 @@
-<interface type='network'>
-  <source network='default'/>
-  <model type='virtio'/>
-</interface>
