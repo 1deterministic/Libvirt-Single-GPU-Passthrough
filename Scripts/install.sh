@@ -1,17 +1,17 @@
 #!/usr/bin/bash
 
 # installs the perfgovernor service
-cp "./perfgovernor.service" "/etc/systemd/system"
-systemctl daemon-reload
+sudo cp "./perfgovernor.service" "/etc/systemd/system"
+sudo systemctl daemon-reload
 
 # installs the helper script
-cp "./startvm-helper" "/usr/bin"
-chown root:root "/usr/bin/startvm-helper"
-chmod 755 "/usr/bin/startvm-helper"
+sudo cp "./startvm-helper" "/usr/bin"
+sudo chown root:root "/usr/bin/startvm-helper"
+sudo chmod 755 "/usr/bin/startvm-helper"
 
 # installs the starting script
-cp "./startvm" "/usr/bin"
-chown root:root "/usr/bin/startvm"
-chmod 755 "/usr/bin/startvm"
+sudo cp "./startvm" "/usr/bin"
+sudo chown root:root "/usr/bin/startvm"
+sudo chmod 755 "/usr/bin/startvm"
 
 echo "Done!"
