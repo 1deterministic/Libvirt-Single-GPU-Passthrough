@@ -52,6 +52,21 @@ sleep 5
 chvt 5; sleep 5
 pkill -KILL -u "$2"; sleep 5
 
+# drops caches
+# echo 3 > /proc/sys/vm/drop_caches
+
+# compacts memory
+# echo 1 > /proc/sys/vm/compact_memory
+
+# allocates hugepages
+# sysctl vm.nr_hugepages=4096
+
+# reduce VM jitter? https://rokups.github.io/#!pages/gaming-vm-performance.md
+sysctl vm.stat_interval=300
+
+# lock writeback to using only host-specific cores
+# echo 88 > /sys/bus/workqueue/devices/writeback/cpumask
+
 # changes the cpu frequency governor to performance
 systemctl start perfgovernor
 
@@ -86,6 +101,15 @@ sleep 5
 
 # changes the cpu frequency governor back to powersave
 systemctl stop perfgovernor
+
+# unlock writeback to use all cores
+# echo ff > /sys/bus/workqueue/devices/writeback/cpumask
+
+# restore reduce jitter workaround
+sysctl vm.stat_interval=1
+
+# free hugepages
+# sysctl vm.nr_hugepages=0
 
 # starts the display manager again
 systemctl start display-manager

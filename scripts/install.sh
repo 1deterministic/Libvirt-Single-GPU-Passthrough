@@ -5,13 +5,13 @@ sudo cp "./perfgovernor.service" "/etc/systemd/system"
 sudo systemctl daemon-reload
 
 # installs the helper script
-sudo cp "./startvm-helper" "/usr/bin"
-sudo chown root:root "/usr/bin/startvm-helper"
-sudo chmod 755 "/usr/bin/startvm-helper"
+sudo cp "./lsgp-helper" "/usr/bin"
+sudo chown root:root "/usr/bin/lsgp-helper"
+sudo chmod 755 "/usr/bin/lsgp-helper"
 
 # installs the starting script
-sudo cp "./startvm" "/usr/bin"
-sudo chown root:root "/usr/bin/startvm"
-sudo chmod 755 "/usr/bin/startvm"
+sudo cp "./lsgp" "/usr/bin"
+sudo chown root:root "/usr/bin/lsgp"
+sudo chmod 755 "/usr/bin/lsgp"
 
 echo "Done!"
