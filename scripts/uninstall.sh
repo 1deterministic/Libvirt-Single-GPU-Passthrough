@@ -5,9 +5,9 @@ sudo rm "/etc/systemd/system/perfgovernor.service"
 sudo systemctl daemon-reload
 
 # removes the helper script
-sudo rm "/usr/bin/startvm-helper"
+sudo rm "/usr/bin/lsgp-helper"
 
 # removes the starting script
-sudo rm "/usr/bin/startvm"
+sudo rm "/usr/bin/lsgp"
 
 echo "Done!"
