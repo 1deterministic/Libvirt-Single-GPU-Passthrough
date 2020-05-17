@@ -12,8 +12,22 @@
     <acpi/><apic/>
     <vmport state='off'/>
   </features>
-  <cpu>
+  <cpu mode='custom' check='none'>
+    <model>Penryn</model>
+    <vendor>GenuineIntel</vendor>
     <topology sockets='1' cores='1' threads='1'/>
+    <feature name='invtsc' policy='require'/>
+    <feature name='hypervisor' policy='require'/>
+    <feature name='pcid' policy='require'/>
+    <feature name='ssse3' policy='require'/>
+    <feature name='sse4.2' policy='require'/>
+    <feature name='popcnt' policy='require'/>
+    <feature name='avx' policy='require'/>
+    <feature name='aes' policy='require'/>
+    <feature name='xsave' policy='require'/>
+    <feature name='xsaveopt' policy='require'/>
+    <feature name='vme' policy='require'/>
+    <feature name='x2apic' policy='require'/>
   </cpu>
   <clock offset='utc'>
     <timer name='rtc' tickpolicy='catchup'/>
@@ -46,11 +60,7 @@
     <memballoon model='none'/>
   </devices>
   <qemu:commandline>
-    <qemu:arg value='-cpu'/>
-    <qemu:arg value='Penryn,kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on,+pcid,+ssse3,+sse4.2,+popcnt,+avx,+aes,+xsave,+xsaveopt,check'/>
     <qemu:arg value='-device'/>
     <qemu:arg value='isa-applesmc,osk=ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc'/>
-    <qemu:arg value='-smbios'/>
-    <qemu:arg value='type=2'/>
   </qemu:commandline>
 </domain>
