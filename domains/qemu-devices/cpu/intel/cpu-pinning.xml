@@ -1,5 +1,5 @@
 <!--
-example for a 4c8t pinning with hyperthreading enabled for the guest
+example of a 4c8t pinning with hyperthreading enabled for the guest
 -->
 <vcpu placement='static'>8</vcpu>
 <cputune>
