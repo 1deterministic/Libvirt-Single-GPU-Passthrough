@@ -7,4 +7,4 @@ if [ $(whoami) == "root" ]; then
 fi
 
 # sends the correct command
-sudo su -c "lsgp-helper $1 $(whoami) | tee /tmp/lsgp-log.txt &"
+sudo su -c "lsgp-helper $1 $(whoami) &"

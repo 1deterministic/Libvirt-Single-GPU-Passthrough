@@ -49,8 +49,14 @@ systemctl stop display-manager
 sleep 5
 
 # changes to another tty
-chvt 5; sleep 5
-pkill -KILL -u "$2"; sleep 5
+chvt 2
+sleep 5
+
+# terminate all remaining user processes
+pkill -TERM -u "$2" # try terminating them nicely first
+sleep 5
+pkill -KILL -u "$2" # then kill the persistent ones
+sleep 5
 
 # drops caches
 # echo 3 > /proc/sys/vm/drop_caches
