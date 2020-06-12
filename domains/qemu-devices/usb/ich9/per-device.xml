@@ -1,9 +1,11 @@
 <!--
 an usb controller is required to use per-device usb passthrough, you can use uhci1.xml for instance
 -->
-<hostdev mode='subsystem' type='usb' managed='yes'>
-  <source>
-    <vendor id='vendorid'/>
-    <product id='productid'/>
-  </source>
-</hostdev>
+<devices>
+  <hostdev mode='subsystem' type='usb' managed='yes'>
+    <source>
+      <vendor id='vendorid'/>
+      <product id='productid'/>
+    </source>
+  </hostdev>
+</devices>

@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# if this usb device is connected to the host the vm will be terminated (the host must not have crashed and the usb port must not be passed through to the guest)
+# if this usb device is connected to the host the vm will be terminated
 killSwitchVendorID="XXXX"
 killSwitchProductId="XXXX"
 
@@ -44,44 +44,46 @@ fi
 echo "Finishing the display manager in 10 seconds, you can exit the terminal if you want"
 sleep 10
 
+# logout user
+pkill -TERM -u "$2"
+sleep 5
+
 # stops the display manager
 systemctl stop display-manager
 sleep 5
 
-# changes to another tty
-chvt 2
-sleep 5
-
-# terminate all remaining user processes
-pkill -TERM -u "$2" # try terminating them nicely first
-sleep 5
-pkill -KILL -u "$2" # then kill the persistent ones
-sleep 5
+# if using plasma, kwin may crash when sddm is stopped
+# sudo pkill -KILL kwin_x11
 
 # drops caches
-# echo 3 > /proc/sys/vm/drop_caches
+echo 3 > /proc/sys/vm/drop_caches
 
 # compacts memory
-# echo 1 > /proc/sys/vm/compact_memory
+echo 1 > /proc/sys/vm/compact_memory
 
-# allocates hugepages
+# if using hugepages, this will allocate 4096 pages of 2MiB each = 8GiB
 # sysctl vm.nr_hugepages=4096
 
 # reduce VM jitter? https://rokups.github.io/#!pages/gaming-vm-performance.md
 sysctl vm.stat_interval=300
 
-# lock writeback to using only host-specific cores
+# if reserving cores to the host, this will lock writeback tasks to use only host-specific cores - 88 is the hexadecimal for the bitmask 10001000
 # echo 88 > /sys/bus/workqueue/devices/writeback/cpumask
 
 # changes the cpu frequency governor to performance
-systemctl start perfgovernor
+for i in /sys/devices/system/cpu/cpu[0-9]*/cpufreq/scaling_governor; do
+    echo "performance" > $i
+done
 
 # starts the specified vm
 virsh start "$1"
 isVMRunning=1
 
 # waits some time before starting to check if the VM has stopped
-sleep 5
+sleep 10
+# changes the qemu process scheduler to FIFO and nice to -20
+ls /proc/$(pgrep -f "$1")/task | xargs -n 1 chrt -f -p 99
+ls /proc/$(pgrep -f "$1")/task | xargs renice -n -20
 # checks if the VM has stopped at every 5 seconds
 while [[ $isVMRunning == 1 ]]; do
     # gets the vm running state
@@ -106,15 +108,17 @@ done
 sleep 5
 
 # changes the cpu frequency governor back to powersave
-systemctl stop perfgovernor
+for i in /sys/devices/system/cpu/cpu[0-9]*/cpufreq/scaling_governor; do
+    echo "powersave" > $i
+done
 
-# unlock writeback to use all cores
+# if reserving cores to the host, you can unlock writeback to use all cores again
 # echo ff > /sys/bus/workqueue/devices/writeback/cpumask
 
 # restore reduce jitter workaround
 sysctl vm.stat_interval=1
 
-# free hugepages
+# if using hugepages, this will free them
 # sysctl vm.nr_hugepages=0
 
 # starts the display manager again

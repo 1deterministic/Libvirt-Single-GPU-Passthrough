@@ -2,9 +2,8 @@
 
 # ensures this script is run by a regular user
 if [ $(whoami) == "root" ]; then
-    echo "Please run this script as a regular user, it should ask for permissions when appropriate"
-    exit 1
+    echo "Please run this script as a regular user, it needs to know what user to logoff"
+else
+    # sends the correct command
+    sudo su -c "lsgp-helper $1 $(whoami) &"
 fi
-
-# sends the correct command
-sudo su -c "lsgp-helper $1 $(whoami) &"

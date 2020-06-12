@@ -1,5 +1,5 @@
 options kvm ignore_msrs=1
 options kvm report_ignored_msrs=0
 
-# to enable nested virtualization use this, will also need to enable the virtualization flag for the guest in its xml file
+# to enable nested virtualization use this, you will also need to enable the virtualization flag for the guest in its xml file
 options kvm_intel nested=1

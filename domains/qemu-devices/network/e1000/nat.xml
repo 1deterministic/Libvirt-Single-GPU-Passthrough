@@ -1,4 +1,6 @@
-<interface type='network'>
-  <source network='default'/>
-  <model type='e1000-82545em'/>
-</interface>
+<devices>
+  <interface type='network'>
+    <source network='default'/>
+    <model type='e1000-82545em'/>
+  </interface>
+</devices>

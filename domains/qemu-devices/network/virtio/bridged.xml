@@ -1,4 +1,6 @@
-<interface type='direct'>
-  <source dev='device' mode='bridge'/>
-  <model type='virtio'/>
-</interface>
+<devices>
+  <interface type='direct'>
+    <source dev='device' mode='bridge'/>
+    <model type='virtio'/>
+  </interface>
+</devices>

@@ -1,5 +1,8 @@
-<disk type='file' device='disk'>
-  <driver name='qemu' type='raw'/>
-  <source file='/path/to/file.img'/>
-  <target dev='vda' bus='virtio'/>
-</disk>
+<!-- change <target dev='vdn'... to any sd(number) you like as long as it is unique in within all target disks in your .xml -->
+<devices>
+  <disk type='file' device='disk'>
+    <driver name='qemu' type='raw'/>
+    <source file='/usr/share/libvirt/lsgp/disks/file.img'/>
+    <target dev='vdn' bus='virtio'/>
+  </disk>
+</devices>

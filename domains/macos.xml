@@ -1,12 +1,12 @@
 <domain type='kvm' xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
-  <name>name</name>
+  <name>macos</name>
   <memory unit='MiB'>1024</memory>
   <vcpu placement='static'>1</vcpu>
   <cputune></cputune>
   <os>
     <type arch='x86_64' machine='pc-q35-4.1'>hvm</type>
-    <loader readonly='yes' type='pflash'>/path/to/ovmf-apple.fd</loader>
-    <nvram template='/path/to/ovmf-apple_vars.fd'>/path/to/nvram.fd</nvram>
+    <loader readonly='yes' type='pflash'>/usr/share/libvirt/lsgp/firmware/ovmf-apple.fd</loader>
+    <nvram template='/usr/share/libvirt/lsgp/nvram/ovmf-apple_vars.fd'>/usr/share/libvirt/lsgp/nvram/macos.fd</nvram>
   </os>
   <features>
     <acpi/><apic/>
@@ -45,7 +45,7 @@
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source file='/path/to/clover.qcow2'/>
+      <source file='/usr/share/libvirt/lsgp/bootloaders/clover.qcow2'/>
       <target dev='sda' bus='sata'/>
       <boot order='1'/>
     </disk>
