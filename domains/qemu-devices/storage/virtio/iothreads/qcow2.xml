@@ -3,7 +3,7 @@
 <devices>
   <disk type='file' device='disk'>
     <driver name='qemu' type='qcow2' iothread='n'/>
-    <source file='/usr/share/libvirt/lsgp/disks/file.qcow2'/>
+    <source file='file.qcow2'/>
     <target dev='vdn' bus='virtio'/>
   </disk>
 </devices>

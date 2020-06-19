@@ -2,7 +2,7 @@
 <devices>
   <disk type='file' device='disk'>
     <driver name='qemu' type='raw'/>
-    <source file='/usr/share/libvirt/lsgp/disks/file.img'/>
+    <source file='file.img'/>
     <target dev='sdn' bus='sata'/>
   </disk>
 </devices>

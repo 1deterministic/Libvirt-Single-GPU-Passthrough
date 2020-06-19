@@ -2,7 +2,7 @@
 <devices>
   <disk type='file' device='cdrom'>
     <driver name='qemu' type='raw'/>
-    <source file='/usr/share/libvirt/lsgp/isos/file.iso'/>
+    <source file='file.iso'/>
     <target dev='sdn' bus='sata'/>
     <readonly/>
   </disk>
