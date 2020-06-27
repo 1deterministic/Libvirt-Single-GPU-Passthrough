@@ -104,14 +104,14 @@ if [[ "$hugepages" != "" && "$hugepages" > 0 ]]; then
     echo "Compacting memory to allocate hugepages"
     echo 1 > "/proc/sys/vm/compact_memory"
 
-    # allocates 4096 pages of 2MiB each = 8GiB
+    # allocates as many hugepages as defined in the config file
     echo "Allocating hugepages"
     sysctl vm.nr_hugepages=$hugepages
 fi
 
 # reduce VM jitter? https://rokups.github.io/#!pages/gaming-vm-performance.md
 echo "Reducing stat interval"
-sysctl vm.stat_interval=300
+sysctl vm.stat_interval=120
 
 # if restricting writeback
 if [[ "$writeback" != "" ]]; then
