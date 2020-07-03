@@ -91,7 +91,7 @@ sleep 5
 # if using plasma, kwin may crash when sddm is stopped
 if [[ $(pgrep -f kwin_x11) != "" ]]; then
     echo "Kwin is still running, killing it"
-    sudo pkill -KILL kwin_x11
+    pkill -KILL kwin_x11
 fi
 
 # if using hugepages
