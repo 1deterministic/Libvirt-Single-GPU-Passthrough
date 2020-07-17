@@ -2,7 +2,7 @@
 Description=LSGP virtual machine starter
 
 [Service]
-ExecStart=/usr/bin/bash -c 'lsgp $(awk -F: '"'"'{ print $1" "$2 }'"'"' <<< %i)'
+ExecStart=/usr/bin/bash -c 'lsgp %i'
 
 [Install]
 WantedBy=multi-user.target
