@@ -133,6 +133,14 @@ if [[ "$cpugovernor" != "" ]]; then
     done
 fi
 
+# if the graphics card is NVIDIA
+if [[ $(lspci | grep "VGA" | grep "NVIDIA") != "" ]]; then
+    echo 0 > "/sys/class/vtconsole/vtcon0/bind"
+    echo 0 > "/sys/class/vtconsole/vtcon1/bind"
+    echo "efi-framebuffer.0" > "/sys/bus/platform/drivers/efi-framebuffer/unbind"
+    sleep 5
+fi
+
 # starts the specified vm
 echo "Starting the VM"
 virsh start "$1"
@@ -167,6 +175,14 @@ done
 
 # waits 5 seconds for the gpu to be returned to the host
 sleep 5
+
+# if the graphics card is NVIDIA
+if [[ $(lspci | grep "VGA" | grep "NVIDIA") != "" ]]; then
+    echo "efi-framebuffer.0" > "/sys/bus/platform/drivers/efi-framebuffer/bind"
+    echo 1 > "/sys/class/vtconsole/vtcon0/bind"
+    echo 1 > tee "/sys/class/vtconsole/vtcon1/bind"
+    sleep 5
+fi
 
 # if changing the CPU governor
 if [[ "$cpugovernor" != "" ]]; then
