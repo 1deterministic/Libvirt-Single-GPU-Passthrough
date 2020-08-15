@@ -180,7 +180,7 @@ sleep 5
 if [[ $(lspci | grep "VGA" | grep "NVIDIA") != "" ]]; then
     echo "efi-framebuffer.0" > "/sys/bus/platform/drivers/efi-framebuffer/bind"
     echo 1 > "/sys/class/vtconsole/vtcon0/bind"
-    echo 1 > tee "/sys/class/vtconsole/vtcon1/bind"
+    echo 1 > "/sys/class/vtconsole/vtcon1/bind"
     sleep 5
 fi
 
