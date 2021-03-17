@@ -1,22 +1,14 @@
 #!/bin/bash
 
-# create destination folder
-sudo mkdir "/usr/share/libvirt/lsgp"
+if [[ "$(whoami)" != "root" ]]; then
+    echo "Please run this script as root."
+    exit 1
+fi
 
-# copy files
-sudo cp -r "./bootloaders" "/usr/share/libvirt/lsgp"
-sudo cp -r "./firmware" "/usr/share/libvirt/lsgp"
-sudo cp -r "./nvram" "/usr/share/libvirt/lsgp"
-sudo cp "./scripts/lsgp" "/usr/bin"
-sudo cp "./scripts/lsgp.conf" "/etc"
-sudo cp "./services/lsgp@.service" "/etc/systemd/system"
+# extract all files to root
+cat "./sysroot.tar.gz" | gzip -d | tar --extract --directory "/" &&
 
-# fix permissions
-find "/usr/share/libvirt/lsgp" -type d -exec sudo chmod 755 "{}" \;
-find "/usr/share/libvirt/lsgp" -type f -exec sudo chmod 644 "{}" \;
-sudo chmod 755 "/usr/bin/lsgp"
-sudo chmod 644 "/etc/lsgp.conf"
-sudo chmod 644 "/etc/systemd/system/lsgp@.service"
+# reload systemd services
+systemctl daemon-reload &&
 
-# reload services
-sudo systemctl daemon-reload
+echo "Done!"

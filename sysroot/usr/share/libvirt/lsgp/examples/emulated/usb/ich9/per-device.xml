@@ -1,0 +1,10 @@
+<!-- an usb controller is required to use per-device usb passthrough, you can use uhci1.xml for instance -->
+<!-- the device must be plugged in when starting the vm otherwise it will not start -->
+<devices>
+  <hostdev mode='subsystem' type='usb' managed='yes'>
+    <source>
+      <vendor id='vendorid'/>
+      <product id='productid'/>
+    </source>
+  </hostdev>
+</devices>

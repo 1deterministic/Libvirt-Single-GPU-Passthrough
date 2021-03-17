@@ -1,0 +1,9 @@
+<!-- this device doesn't work on macOS, use per-device usb passthrough instead -->
+<!-- uses the ehci-pci kernel module -->
+<devices>
+  <hostdev mode='subsystem' type='pci' managed='yes'>
+    <source>
+      <address domain='0x0000' bus='0x00' slot='0x1d' function='0x0'/>
+    </source>
+  </hostdev>
+</devices>

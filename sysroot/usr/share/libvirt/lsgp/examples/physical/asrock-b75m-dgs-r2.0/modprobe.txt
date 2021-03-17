@@ -1,0 +1,6 @@
+# these fix the host crashing when opening certain applications like CPU-Z
+options kvm ignore_msrs=1
+options kvm report_ignored_msrs=0
+
+# to enable nested virtualization use this, you will also need to add vmx instructions to the guest cpu xml and remove the kvm hidden state flag (which will break the proprietary NVIDIA driver on the guest)
+options kvm_intel nested=1

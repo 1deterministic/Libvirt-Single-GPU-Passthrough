@@ -1,8 +1,0 @@
-<!-- change <target dev='sdn'... to any sd(number) you like as long as it is unique in within all target disks in your .xml -->
-<devices>
-  <disk type='file' device='disk'>
-    <driver name='qemu' type='raw'/>
-    <source file='file.img'/>
-    <target dev='sda' bus='scsi'/>
-  </disk>
-</devices>

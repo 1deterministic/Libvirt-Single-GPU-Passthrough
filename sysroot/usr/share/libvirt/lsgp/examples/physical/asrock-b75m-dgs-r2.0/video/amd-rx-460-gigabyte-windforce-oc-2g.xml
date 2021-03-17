@@ -1,0 +1,15 @@
+<!-- you may need to use the following kernel parameter if you run into issues getting the display manager to start again after shutting down the virtual machine: amdgpu.dc=0 -->
+<!-- uses the amdgpu kernel module -->
+<devices>
+  <hostdev mode='subsystem' type='pci' managed='yes'>
+    <source>
+      <address domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
+    </source>
+    <rom bar='on' file='/usr/share/libvirt/lsgp/firmware/graphics/amd-rx-460-gigabyte-windforce-oc-2g-f63.rom'/>
+  </hostdev>
+  <hostdev mode='subsystem' type='pci' managed='yes'>
+    <source>
+      <address domain='0x0000' bus='0x01' slot='0x00' function='0x1'/>
+    </source>
+  </hostdev>
+</devices>

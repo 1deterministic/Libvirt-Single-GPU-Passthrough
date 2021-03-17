@@ -1,0 +1,9 @@
+<!-- change <source file='/dev/sdn'... to reflect the path of the disk to use and <target dev='vdn'... to any sd(number) you like as long as it is unique within all target disks in your xml, change iothread='n' to any number greater than zero identifying the iothread number (they can be reused), change <iothreads>n... to the total number of different iothreads used -->
+<iothreads>n</iothreads>
+<devices>
+  <disk type='block' device='disk'>
+    <driver name='qemu' type='raw' iothread='n'/>
+    <source dev='/dev/sdn'/>
+    <target dev='vdn' bus='virtio'/>
+  </disk>
+</devices>

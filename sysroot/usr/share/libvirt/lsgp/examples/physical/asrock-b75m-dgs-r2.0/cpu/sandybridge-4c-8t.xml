@@ -1,0 +1,19 @@
+<!-- since both host and guest will place important processes on cpu0, the cpu pinning here is done backwards -->
+<!-- custom cpu model sandybridge was the best overall perfomance but for Doom 2016 EPYC fixed some low framerate problems -->
+<vcpu placement='static'>8</vcpu>
+<cputune>
+  <vcpupin vcpu='0' cpuset='3'/>
+  <vcpupin vcpu='1' cpuset='7'/>
+  <vcpupin vcpu='2' cpuset='2'/>
+  <vcpupin vcpu='3' cpuset='6'/>
+  <vcpupin vcpu='4' cpuset='1'/>
+  <vcpupin vcpu='5' cpuset='5'/>
+  <vcpupin vcpu='6' cpuset='0'/>
+  <vcpupin vcpu='7' cpuset='4'/>
+</cputune>
+<cpu mode='custom' check='none'>
+  <model>SandyBridge</model>
+  <topology sockets='1' cores='4' threads='2'/>
+  <cache level='3' mode='emulate'/>
+  <feature name='invtsc' policy='require'/>
+</cpu>

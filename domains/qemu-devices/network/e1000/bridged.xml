@@ -1,6 +1,0 @@
-<devices>
-  <interface type='direct'>
-    <source dev='device' mode='bridge'/>
-    <model type='e1000-82545em'/>
-  </interface>
-</devices>

@@ -1,0 +1,8 @@
+<!-- uses the snd_hda_intel kernel module -->
+<devices>
+  <hostdev mode='subsystem' type='pci' managed='yes'>
+    <source>
+      <address domain='0x0000' bus='0x00' slot='0x1b' function='0x0'/>
+    </source>
+  </hostdev>
+</devices>

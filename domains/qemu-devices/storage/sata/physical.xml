@@ -1,8 +1,0 @@
-<!-- change <source file='/dev/sdn'... to reflect the path of the disk to use and <target dev='sdn'... to any sd(number) you like as long as it is unique in within all target disks in your .xml -->
-<devices>
-  <disk type='block' device='disk'>
-    <driver name='qemu' type='raw'/>
-    <source file='/dev/sdn'/>
-    <target dev='sdn' bus='sata'/>
-  </disk>
-</devices>

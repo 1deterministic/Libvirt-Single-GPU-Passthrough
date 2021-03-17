@@ -1,0 +1,249 @@
+#!/usr/bin/bash
+
+# to run this file use something like this:
+# sudo systemctl start lsgp@$virtualmachine.service
+
+echo "Starting virtual machine '$1' using lsgp"
+
+# location of the config file
+config="/etc/lsgp.conf"
+
+# virsh applies localization to returned values, this array should contain equivalents to 'shutoff' in different languages
+# en-us, pt-br
+shutoffWords=("shutoff" "desligado")
+
+# assumes the vm is not available
+isVMAvailable=0
+
+# assumes the vm is not running
+isVMRunning=0
+
+# location of the lock file
+lockFile="/tmp/lsgp.lock"
+
+# stops if the config file is missing
+if [[ ! -f "$config" ]]; then
+    echo "Missing config file at $config"
+    exit 1
+else
+    echo "Loading config file from $config"
+    source "$config"
+fi
+
+# stops if not running as root
+if [[ ! $(whoami) == "root" ]]; then
+    echo "This script should be run as root"
+    exit 1
+fi
+
+# stops if the vm name was not specified
+if [[ "$1" == "" ]]; then
+    echo "No virtual machine name specified"
+    exit 1
+fi
+
+# gets the availability of the vm
+for word in "${shutoffWords[@]}"; do
+    if [[ "$word" == $(virsh domstate "$1") ]]; then
+        isVMAvailable=1
+        break
+    fi
+done
+
+# prevents starting a running or inexistent vm
+if [[ "$isVMAvailable" != 1 ]]; then
+    echo "The specified virtual machine is not available - either it doesn't exist or is already running"
+    exit 1
+fi
+
+# creates the lock file
+if [[ -f "$lockFile" ]]; then
+    echo "Lockfile at $lockFile is present, which means that there is another lsgp VM running, stopping here to prevent any problems"
+    exit 1
+else
+    echo "Creating lock file at $lockFile"
+    touch "$lockFile"
+fi
+
+# runs all pre commands
+echo "Running pre commands"
+for command in "${pre[@]}"; do
+    eval "$command"
+done
+
+# stops the display manager
+echo "Stopping the display manager"
+systemctl stop display-manager
+sleep 5
+
+# if using plasma, kwin may crash when sddm is stopped
+if [[ $(pgrep -f kwin_x11) != "" ]]; then
+    echo "Kwin is still running, killing it"
+    pkill -KILL kwin_x11
+fi
+
+# if the xorg server is still running, then kill it
+if [[ $(pgrep -f Xorg) != "" ]]; then
+    echo "Xorg is still running, killing it"
+    pkill -KILL Xorg
+fi
+
+# if using hugepages
+if [[ "$hugepages" != "" && "$hugepages" > 0 ]]; then
+    # drops caches
+    echo "Dropping caches from memory"
+    echo 3 > "/proc/sys/vm/drop_caches"
+
+    # compacts memory
+    echo "Compacting memory to allocate hugepages"
+    echo 1 > "/proc/sys/vm/compact_memory"
+
+    # allocates as many hugepages as defined in the config file
+    echo "Allocating hugepages"
+    sysctl vm.nr_hugepages=$hugepages
+fi
+
+# reduce VM jitter? https://rokups.github.io/#!pages/gaming-vm-performance.md
+echo "Reducing stat interval"
+sysctl vm.stat_interval=120
+
+# if restricting writeback
+if [[ "$writeback" != "" ]]; then
+    oldWritebackCpumask=$(cat "/sys/bus/workqueue/devices/writeback/cpumask")
+
+    echo "Binding writeback cores to host reserved cores"
+    echo "$writeback" > "/sys/bus/workqueue/devices/writeback/cpumask"
+fi
+
+# if changing the CPU governor
+if [[ "$cpugovernor" != "" ]]; then
+    # stores the old cpu governor
+    oldCpuGovernor=$(cat "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor")
+    
+    # changes the cpu frequency governor
+    echo "Activating desired CPU governor"
+    for i in "/sys/devices/system/cpu/cpu"[0-9]*"/cpufreq/scaling_governor"; do
+        echo "$cpugovernor" > "$i"
+    done
+fi
+
+# if the graphics card is NVIDIA
+if [[ $(lspci | grep "VGA" | grep "NVIDIA") != "" ]]; then
+    echo "Unbinding NVIDIA driver"
+    echo 0 > "/sys/class/vtconsole/vtcon0/bind"
+    echo 0 > "/sys/class/vtconsole/vtcon1/bind"
+    echo "efi-framebuffer.0" > "/sys/bus/platform/drivers/efi-framebuffer/unbind"
+    sleep 5
+fi
+
+# manually unbind defined modules
+for module in "${unbind[@]}"; do
+    rebind=("$module" "${rebind[@]}")
+    
+    echo "Unbinding module: $module"
+    modprobe -r "$module"
+done
+
+# wait 5 seconds for any pending operations
+sleep 5
+
+# starts the specified vm
+echo "Starting the VM"
+virsh start "$1"
+isVMRunning=1
+
+# waits some time before starting to check if the VM has stopped
+sleep 60
+
+# checks if the VM has stopped at every 5 seconds
+while [[ "$isVMRunning" == 1 ]]; do
+    # gets the vm running state
+    for word in "${shutoffWords[@]}"; do
+        if [[ "$word" == $(virsh domstate "$1") ]]; then
+            echo "VM has stopped, returning to host"
+            isVMRunning=0
+            break
+        fi
+    done
+    
+    if [[ "$killswitch" != "" ]]; then
+        # checks the presence of the specified usb killswitch
+        if [[ $(awk '$2 == "Vendor='$(awk -F: '{ print $1 }' <<< "$killswitch")'" && $3 == "ProdID='$(awk -F: '{ print $2 }' <<< "$killswitch")'" { print $0 }' "/sys/kernel/debug/usb/devices") != "" ]]; then 
+            echo "Killswitch plugged in, killing the VM"
+            virsh destroy "$1"
+            # don't interfere with isVMRunning here, wait for libvirt to kill the VM
+        fi
+    fi
+    
+    # waits some time before the next check
+    sleep 5
+done
+
+# waits 5 seconds for the gpu to be returned to the host
+sleep 5
+
+# manually rebind defined modules
+for module in "${rebind[@]}"; do
+    echo "Rebinding module: $module"
+    modprobe "$module"
+done
+
+# if the graphics card is NVIDIA
+if [[ $(lspci | grep "VGA" | grep "NVIDIA") != "" ]]; then
+    sleep 5
+    echo "Binding NVIDIA driver"
+    echo "efi-framebuffer.0" > "/sys/bus/platform/drivers/efi-framebuffer/bind"
+    echo 1 > "/sys/class/vtconsole/vtcon0/bind"
+    echo 1 > "/sys/class/vtconsole/vtcon1/bind"
+fi
+
+# if changing the CPU governor
+if [[ "$cpugovernor" != "" ]]; then
+    # changes the cpu frequency governor back
+    echo "Restoring powersave CPU governor"
+    for i in "/sys/devices/system/cpu/cpu"[0-9]*"/cpufreq/scaling_governor"; do
+        echo "$oldCpuGovernor" > "$i"
+    done
+fi
+
+# if restricting writeback
+if [[ "$writeback" != "" ]]; then
+    # restores writeback cpumask to default
+    echo "Restoring writeback configuration"
+    echo "$oldWritebackCpumask" > "/sys/bus/workqueue/devices/writeback/cpumask"
+fi
+
+# restore reduce jitter workaround
+echo "Restoring stat interval"
+sysctl vm.stat_interval=1
+
+# if using hugepages
+if [[ "$hugepages" != "" && "$hugepages" > 0 ]]; then
+    # free hugepages
+    echo "Removing hugepages"
+    sysctl vm.nr_hugepages=0
+fi
+
+# wait 5 seconds for any pending operations
+sleep 5
+
+# starts the display manager again
+echo "Starting display manager again"
+systemctl start display-manager
+
+# runs all post commands
+echo "Running post commands"
+for command in "${post[@]}"; do
+    eval "$command"
+done
+
+# removes the lock file
+if [[ -f "$lockFile" ]]; then
+    echo "Removing lock file"
+    rm "$lockFile"
+else
+    echo "Lock file at $lockFile is missing, something weird happened :|"
+    exit 1
+fi
+
+echo "Finished!"

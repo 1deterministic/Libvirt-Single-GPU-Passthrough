@@ -1,0 +1,5 @@
+[0.1]
+* Not the first version but the one I started to keep a changelog
+* Changed the installation method to facilitate distributing by using a tar file
+* Improved notes in the xml files
+* Updated xml examples and the starting script to reflect changes I haven't published yet

@@ -1,3 +1,0 @@
-<cpu>
-  <feature policy='require' name='vmx'/>
-</cpu>
